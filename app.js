@@ -85,7 +85,7 @@ TABS.forEach(btn=>{
 ========================= */
 function recalc(){
   const p = Number(el.amount.value || 0);
-  const fee = p * 0.04;                // 4% processing fee
+  const fee = p * 0.05;                // 5% processing fee
   const monthlyInt = p * 0.32 / 12;    // 32% annual -> 1 month
   const total = p + monthlyInt;        // Payable in 1 month (principal + interest)
   const repay = addMonths(today(), 1);
@@ -306,3 +306,4 @@ window.rejectLoan = (id)=>{
 
 // Initial paint
 paintCustomerView();
+
