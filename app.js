@@ -1,11 +1,11 @@
 /* =========================
-   SwiftLoan – Front-End Demo
+   SwiftLoan – Front-End Demo (Improved)
    Storage: localStorage ("loans")
    Status Flow:
    - "Pending Approval"
    - "Approved (Waiting for Payment)"
    - "Paid (Congratulations)"
-   - "Rejected" (admin only)
+   - "Rejected"
 ========================= */
 
 const qs  = (s, r=document) => r.querySelector(s);
@@ -68,6 +68,26 @@ const niceDate = d => new Date(d).toLocaleDateString('en-IN',{year:'numeric', mo
 const getLoans = () => JSON.parse(localStorage.getItem('loans') || '[]');
 const setLoans = data => localStorage.setItem('loans', JSON.stringify(data));
 
+// Toast Notification
+function toast(msg, type="info"){
+  const box = document.createElement('div');
+  box.textContent = msg;
+  box.style.position = "fixed";
+  box.style.bottom = "20px";
+  box.style.right = "20px";
+  box.style.padding = "10px 16px";
+  box.style.borderRadius = "8px";
+  box.style.fontWeight = "600";
+  box.style.zIndex = 1000;
+  box.style.color = "#fff";
+  box.style.boxShadow = "0 4px 10px rgba(0,0,0,.3)";
+  if(type==="success") box.style.background = "#16a34a";
+  else if(type==="error") box.style.background = "#dc2626";
+  else box.style.background = "#2563eb";
+  document.body.appendChild(box);
+  setTimeout(()=> box.remove(), 2500);
+}
+
 /* =========================
    Tabs
 ========================= */
@@ -87,7 +107,7 @@ function recalc(){
   const p = Number(el.amount.value || 0);
   const fee = p * 0.05;                // 5% processing fee
   const monthlyInt = p * 0.32 / 12;    // 32% annual -> 1 month
-  const total = p + monthlyInt;        // Payable in 1 month (principal + interest)
+  const total = p + monthlyInt;        // Payable in 1 month
   const repay = addMonths(today(), 1);
 
   el.feeView.textContent   = fmtINR(fee.toFixed(2));
@@ -105,7 +125,7 @@ recalc();
 ========================= */
 el.btnPreview.addEventListener('click', ()=>{
   if(!el.mobile.value || !el.upi.value || !el.amount.value){
-    alert('Please fill Mobile, UPI and Amount before continuing.');
+    toast('Please fill Mobile, UPI and Amount before continuing.','error');
     return;
   }
   // reset modal controls
@@ -118,11 +138,11 @@ el.btnCancelAgreement.addEventListener('click', ()=> el.modal.classList.add('hid
 el.agreeChk.addEventListener('change', ()=> el.btnSubmitLoan.disabled = !el.agreeChk.checked);
 
 /* =========================
-   Submit Loan (after agreement)
+   Submit Loan
 ========================= */
 el.btnSubmitLoan.addEventListener('click', ()=>{
   const p = Number(el.amount.value);
-  const fee = p * 0.04;
+  const fee = p * 0.05;
   const monthlyInt = p * 0.32 / 12;
   const total = p + monthlyInt;
   const repay = addMonths(today(), 1);
@@ -145,7 +165,7 @@ el.btnSubmitLoan.addEventListener('click', ()=>{
   setLoans(all);
 
   el.modal.classList.add('hidden');
-  alert('Loan request submitted successfully!');
+  toast('Loan request submitted successfully!','success');
   paintCustomerView();
 });
 
@@ -153,7 +173,7 @@ el.btnSubmitLoan.addEventListener('click', ()=>{
    Customer: Tracking View
 ========================= */
 function paintStepper(status){
-  const order = ['Pending Approval','Approved (Waiting for Payment)','Paid (Congratulations)'];
+  const order = ['Pending Approval','Approved (Waiting for Payment)','Paid (Congratulations)','Rejected'];
   const idx = order.indexOf(status);
   const steps = qsa('.step', el.stepper);
   steps.forEach((st, i)=> {
@@ -226,12 +246,12 @@ function rowTpl(x){
         <button class="icon-btn approve" onclick="approveLoan(${x.id})">Approve</button>
         <button class="icon-btn paid" onclick="markPaid(${x.id})">Mark Paid</button>
         <button class="icon-btn reject" onclick="rejectLoan(${x.id})">Reject</button>
+        <button class="icon-btn" onclick="deleteLoan(${x.id})">Delete</button>
       </div>
     </div>
   `;
 }
 function paintAdmin(list){
-  // search filter
   const q = el.aSearch.value.trim().toLowerCase();
   const filtered = list.filter(x =>
     String(x.id).includes(q) ||
@@ -253,10 +273,14 @@ function loadAdmin(){
 }
 el.aLoginBtn.addEventListener('click', ()=>{
   if(el.aPass.value === 'Sonu@143'){
-    el.aMsg.classList.add('hidden');
+    el.aMsg.textContent = "Login successful!";
+    el.aMsg.style.color = "lime";
+    el.aMsg.classList.remove('hidden');
     el.adminArea.classList.remove('hidden');
     loadAdmin();
   }else{
+    el.aMsg.textContent = "Invalid password.";
+    el.aMsg.style.color = "red";
     el.aMsg.classList.remove('hidden');
   }
 });
@@ -272,8 +296,9 @@ window.approveLoan = (id)=>{
       list[i].status = 'Approved (Waiting for Payment)';
       setLoans(list);
       loadAdmin();
+      toast('Loan approved','success');
     } else {
-      alert('Loan is already processed.');
+      toast('Loan already processed','error');
     }
   }
 };
@@ -285,8 +310,9 @@ window.markPaid = (id)=>{
       list[i].status = 'Paid (Congratulations)';
       setLoans(list);
       loadAdmin();
+      toast('Loan marked Paid','success');
     } else {
-      alert('Loan must be Approved to mark as Paid.');
+      toast('Loan must be Approved first','error');
     }
   }
 };
@@ -298,12 +324,18 @@ window.rejectLoan = (id)=>{
       list[i].status = 'Rejected';
       setLoans(list);
       loadAdmin();
+      toast('Loan Rejected','error');
     } else {
-      alert('Cannot reject a Paid loan.');
+      toast('Cannot reject a Paid loan','error');
     }
   }
+};
+window.deleteLoan = (id)=>{
+  const list = getLoans().filter(x => x.id !== id);
+  setLoans(list);
+  loadAdmin();
+  toast('Loan deleted','success');
 };
 
 // Initial paint
 paintCustomerView();
-
