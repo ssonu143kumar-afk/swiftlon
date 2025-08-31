@@ -1,3 +1,13 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyAMfSpSFON8l11B-uJVlwUKfUaov7VUZ04",
+  authDomain: "swiftlon.firebaseapp.com",
+  projectId: "swiftlon",
+  storageBucket: "swiftlon.firebasestorage.app",
+  messagingSenderId: "6308449601",
+  appId: "1:6308449601:web:058cf99411183d40bde5c0",
+  measurementId: "G-9PTFT7KL3N"
+};
+
 /* =========================
    SwiftLoan – Front-End Demo (Improved)
    Storage: localStorage ("loans")
@@ -7,6 +17,8 @@
    - "Paid (Congratulations)"
    - "Rejected"
 ========================= */
+
+
 
 const qs  = (s, r=document) => r.querySelector(s);
 const qsa = (s, r=document) => [...r.querySelectorAll(s)];
