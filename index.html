@@ -38,17 +38,17 @@
             <input id="c_mobile" type="tel" placeholder="e.g. 9876543210" maxlength="10"/>
 
             <label>UPI ID</label>
-            <input id="c_upi" type="text" placeholder="e.g. 9855559637@upi"/>
+            <input id="c_upi" type="text" placeholder="e.g. sonu@upi"/>
 
             <label>Principal Amount (₹)</label>
             <input id="c_amount" type="number" min="500" step="100" placeholder="e.g. 10000"/>
 
             <div class="fx fx-sb pill">
-              <span>Processing Fee (5%)</span>
+              <span>Processing Fee (3%)</span>
               <strong id="feeView">₹0</strong>
             </div>
             <div class="fx fx-sb pill">
-              <span>Interest (32% p.a for 1 month)</span>
+              <span>Interest (18% p.a for 1 month)</span>
               <strong id="intView">₹0</strong>
             </div>
             <div class="fx fx-sb pill total">
@@ -119,48 +119,23 @@
 
     <!-- ==================== ADMIN TAB ==================== -->
     <section id="adminTab" class="tab">
-  <div class="card">
-    <h2 class="card-title">Admin Login</h2>
-    <div class="form fx fx-gap">
-      <input id="a_pass" type="password" placeholder="Enter Admin Password"/>
-      <button id="btnALogin" class="btn primary">Login</button>
-    </div>
-    <p id="a_msg" class="hidden"></p>
-  </div>
-
-  <div id="adminArea" class="hidden">
-    <div class="fx fx-sb fx-wrap">
-      <h2 class="card-title">Dashboard</h2>
-      <div class="fx fx-gap">
-        <input id="a_search" class="search" type="text" placeholder="Search by mobile/UPI/loan id"/>
-        <button id="btnARefresh" class="btn ghost">Refresh</button>
+      <div class="card">
+        <h2 class="card-title">Admin Login</h2>
+        <div class="form fx fx-gap">
+          <input id="a_pass" type="password" placeholder="Enter Admin Password"/>
+          <button id="btnALogin" class="btn primary">Login</button>
+        </div>
+        <p id="a_msg" class="error hidden">Invalid password.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-<script>
-  const correctPassword = "Sonu@143";
-
-  document.getElementById("btnALogin").addEventListener("click", () => {
-    const enteredPass = document.getElementById("a_pass").value;
-    const msg = document.getElementById("a_msg");
-    const adminArea = document.getElementById("adminArea");
-
-    if (enteredPass === correctPassword) {
-      msg.textContent = "Login successful!";
-      msg.className = "success";  // you can style this class green in CSS
-      adminArea.classList.remove("hidden"); // show dashboard
-    } else {
-      msg.textContent = "Invalid password.";
-      msg.className = "error"; // style this red in CSS
-      adminArea.classList.add("hidden"); // keep dashboard hidden
-    }
-
-    msg.classList.remove("hidden"); // make sure message is visible
-  });
-</script>
-
+      <div id="adminArea" class="hidden">
+        <div class="fx fx-sb fx-wrap">
+          <h2 class="card-title">Dashboard</h2>
+          <div class="fx fx-gap">
+            <input id="a_search" class="search" type="text" placeholder="Search by mobile/UPI/loan id"/>
+            <button id="btnARefresh" class="btn ghost">Refresh</button>
+          </div>
+        </div>
 
         <div class="stats">
           <div class="stat">
@@ -208,10 +183,10 @@
         <p><strong>Important:</strong> Please read and accept before submitting your request.</p>
         <ol class="agreement">
           <li>
-            I understand that a <strong>processing fee of 4% of the principal</strong> is applicable at the time of taking the loan.
+            I understand that a <strong>processing fee of 3% of the principal</strong> is applicable at the time of taking the loan.
           </li>
           <li>
-            Interest is charged at <strong>32% per annum</strong>. For this loan, interest shown is for <strong>one month</strong>.
+            Interest is charged at <strong>18% per annum</strong>. For this loan, interest shown is for <strong>one month</strong>.
           </li>
           <li>
             The <strong>Total Payable</strong> shown is the amount to be repaid on the due date mentioned.
@@ -239,5 +214,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
-
