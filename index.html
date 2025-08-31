@@ -119,23 +119,48 @@
 
     <!-- ==================== ADMIN TAB ==================== -->
     <section id="adminTab" class="tab">
-      <div class="card">
-        <h2 class="card-title">Admin Login</h2>
-        <div class="form fx fx-gap">
-          <input id="a_pass" type="password" placeholder="Enter Admin Password"/>
-          <button id="btnALogin" class="btn primary">Login</button>
-        </div>
-        <p id="a_msg" class="error hidden">Invalid password.</p>
-      </div>
+  <div class="card">
+    <h2 class="card-title">Admin Login</h2>
+    <div class="form fx fx-gap">
+      <input id="a_pass" type="password" placeholder="Enter Admin Password"/>
+      <button id="btnALogin" class="btn primary">Login</button>
+    </div>
+    <p id="a_msg" class="hidden"></p>
+  </div>
 
-      <div id="adminArea" class="hidden">
-        <div class="fx fx-sb fx-wrap">
-          <h2 class="card-title">Dashboard</h2>
-          <div class="fx fx-gap">
-            <input id="a_search" class="search" type="text" placeholder="Search by mobile/UPI/loan id"/>
-            <button id="btnARefresh" class="btn ghost">Refresh</button>
-          </div>
-        </div>
+  <div id="adminArea" class="hidden">
+    <div class="fx fx-sb fx-wrap">
+      <h2 class="card-title">Dashboard</h2>
+      <div class="fx fx-gap">
+        <input id="a_search" class="search" type="text" placeholder="Search by mobile/UPI/loan id"/>
+        <button id="btnARefresh" class="btn ghost">Refresh</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const correctPassword = "Sonu@143";
+
+  document.getElementById("btnALogin").addEventListener("click", () => {
+    const enteredPass = document.getElementById("a_pass").value;
+    const msg = document.getElementById("a_msg");
+    const adminArea = document.getElementById("adminArea");
+
+    if (enteredPass === correctPassword) {
+      msg.textContent = "Login successful!";
+      msg.className = "success";  // you can style this class green in CSS
+      adminArea.classList.remove("hidden"); // show dashboard
+    } else {
+      msg.textContent = "Invalid password.";
+      msg.className = "error"; // style this red in CSS
+      adminArea.classList.add("hidden"); // keep dashboard hidden
+    }
+
+    msg.classList.remove("hidden"); // make sure message is visible
+  });
+</script>
+
 
         <div class="stats">
           <div class="stat">
@@ -214,4 +239,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
